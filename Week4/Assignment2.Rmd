@@ -1,21 +1,24 @@
 ---
-title: "Course Project 2: Impact of Severe weather events in US"
-output: html_document
+title: 'Impact of Severe weather events in US'
+author: "HAN"
+output:
+  html_document: default
+  keep_md: true
 ---
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-
 ## Synopsis
 
-The goal of this project is what kinds of weather events in United Stated results in most damagable effect. I will use U.S National Oceanic and Atmospheric Administration's (NOAA) storm database. Although the data includes from 1950, I will use the most recent one (from 1990) considering that the earlier year lack good records. The main quetions for this project is two:
+Although the development of science was extremely grown up, nowadays, there are still many damages from different kinds of weather events. Thus, studying of the pattern of weather events could be one of the most important things we need to continually study about. The goal of this project is what kinds of weather events in United Stated results in most damagable effect. I will use U.S National Oceanic and Atmospheric Administration's (NOAA) storm database. Although the data includes from 1950, I will use the most recent one (from 1990) considering that the earlier year lack good records. The main quetions for this project is two:
 
 - what weather events are most hamful to population health
 - what weather events have the greatest economic consequence
 
-For the first question, I will use the data of the number of *fatalities* and *injuries*. Also, for the second question, I will use the data of *PROPDM* and *CROPDM*. Here is the documentation related to the description of the original data ([link](https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2Fpd01016005curr.pdf))
+For the first question, I will use the data of the number of *fatalities* and *injuries*. Also, for the second question, I will use the data of *PROPDM* and *CROPDM*. Here is the documentation related to the description of the original data ([link](https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2Fpd01016005curr.pdf)).
 
 
 ## Data Processing
@@ -65,7 +68,7 @@ inj_order$EVTYPE <- factor(inj_order$EVTYPE, levels = inj_order$EVTYPE[order(inj
 ```
 
 
-```{r plot}
+```{r, fig.height=8, fig.width=8}
 g1 <- ggplot(fat_order,aes(EVTYPE,sum))+geom_bar(stat="identity")+
         theme(axis.text.x = element_text(angle = 90, hjust = 1))+
         labs(x="Event Type")+
@@ -74,8 +77,8 @@ g2 <- ggplot(inj_order,aes(EVTYPE,sum))+geom_bar(stat="identity")+
         theme(axis.text.x = element_text(angle = 90, hjust = 1))+
         labs(x="Event Type")+
         labs(title="Injuries")
-g1
-g2
+library(gridExtra)
+grid.arrange(g1,g2,ncol=1)
 ```
 
 It seems that *Excessive Heat* and *Tornado* dominately affect the number of *fatalities* of people in US. At the same time, *Tornado* also affect the number of *injuriety* dominately.  
@@ -115,7 +118,7 @@ cro_order<-head(cro_order[cro_order$sum!=0,],10)
 cro_order$EVTYPE <- factor(cro_order$EVTYPE, levels = cro_order$EVTYPE[order(cro_order$sum,decreasing = TRUE)])
 ```
 
-```{r plot2}
+```{r, fig.height=8, fig.width=8}
 g3<-ggplot(pro_order,aes(EVTYPE,sum))+geom_bar(stat="identity")+
         theme(axis.text.x = element_text(angle = 90, hjust = 1))+
         labs(x="Event Type")+
@@ -124,8 +127,7 @@ g4<-ggplot(cro_order,aes(EVTYPE,sum))+geom_bar(stat="identity")+
         theme(axis.text.x = element_text(angle = 90, hjust = 1))+
         labs(x="Event Type")+
         labs(title="Crop Damage")
-g3
-g4
+grid.arrange(g3,g4,ncol=1)
 ```
 
 The most damagable severe event is *Flood* while another most damagable event is *Drought*.
